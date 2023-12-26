@@ -58,6 +58,7 @@ class StockAccount {
         }
         if (!possible) {
             System.out.println("Not enough shares of this stock to sell");
+            return;
         }
         System.out.println("Stocks sold succesfully");
     }
