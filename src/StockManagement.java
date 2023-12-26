@@ -45,13 +45,18 @@ class StockAccount {
         }
     }
 
-    public void sell(String name, int ammount) {
+    public void sell(String name, int ammount, ArrayList<Stock> stocks) {
         boolean possible = false;
         for (int i = 0; i < this.stocksInAccount.size(); i++) {
             if (this.stocksInAccount.get(i).name.equals(name)) {
 
                 if (this.stocksInAccount.get(i).noOfShare >= ammount) {
                     this.stocksInAccount.get(i).noOfShare -= ammount;
+                    for (int j = 0; j < stocks.size(); j++) {
+                        if (stocks.get(i).name.equals(name)) {
+                            stocks.get(i).noOfShare += ammount;
+                        }
+                    }
                     possible = true;
                 }
             }
@@ -74,6 +79,14 @@ class StockAccount {
 
 public class StockManagement {
     public static ArrayList<Stock> stocks = new ArrayList<Stock>();
+
+    public static void stocksReport() {
+        for (int i = 0; i < stocks.size(); i++) {
+            Stock stock = stocks.get(i);
+            System.out.println("Name of stock " + stock.name + "  No of Shares: " + stock.noOfShare + " Share Price: "
+                    + stock.sharePrice + " Value of Stock " + stock.value());
+        }
+    }
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
@@ -101,13 +114,16 @@ public class StockManagement {
 
         StockAccount stockAccount = new StockAccount("Account 1");
         boolean end = false;
+
+        System.out.println("\n");
         while (true) {
             System.out.println("What do you want to do");
             System.out.println("Enter 0 to end");
             System.out.println("Enter 1 to buy a stock");
             System.out.println("Enter 2 to sell a stock");
             System.out.println("Enter 3 to get value of stock in the Account");
-            System.out.println("Enter 4 to get the report of the stocks");
+            System.out.println("Enter 4 to get the report of the stocks in the Account");
+            System.out.println("Enter 5 to get all the stocks report ");
             int choice = sc.nextInt();
             sc.nextLine();
             switch (choice) {
@@ -145,7 +161,7 @@ public class StockManagement {
                     String name = sc.nextLine();
                     System.out.println("Enter the quantity to sell");
                     int amount = sc.nextInt();
-                    stockAccount.sell(name, amount);
+                    stockAccount.sell(name, amount, stocks);
 
                     break;
                 }
@@ -156,9 +172,16 @@ public class StockManagement {
                 }
                 case 4: {
                     stockAccount.report();
-                }
-                default:
                     break;
+                }
+                case 5: {
+                    stocksReport();
+                    break;
+                }
+                default: {
+                    System.out.println("Enter a value between 0-5");
+                    break;
+                }
             }
             if (end)
                 break;
